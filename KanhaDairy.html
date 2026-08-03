@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kanha Dairy - Operations & Management Dashboard</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="KanhaDairy.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="brand-container">
+        <div class="brand-logo-icon">
+          <i class="mother-dairy-logo"></i>
+        </div>
+        <div class="brand-text">
+          <h1>Kanha Dairy</h1>
+          <span>Main Office Portal</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" id="refreshAppBtn" title="Refresh Data">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+        <button class="icon-btn" title="User Profile">
+          <i class="fa-solid fa-circle-user"></i>
+        </button>
+      </div>
+    </header>
+
+    <nav class="nav-switch-bar">
+      <button
+        class="nav-btn active"
+        id="tabMainOffice"
+        onclick="switchTab('main-office')"
+      >
+        <i class="fa-solid fa-building-user"></i> Main Office
+      </button>
+      <button
+        class="nav-btn"
+        id="tabDeliveryPartner"
+        onclick="switchTab('delivery-partner')"
+      >
+        <i class="fa-solid fa-hand-holding-hand"></i> Partner Assign
+      </button>
+      <button
+        class="nav-btn"
+        id="tabCustomers"
+        onclick="switchTab('customers-panel')"
+      >
+        <i class="fa-solid fa-users"></i> Customer Records
+      </button>
+    </nav>
+
+    <main class="container">
+      <section id="view-main-office" class="tab-content active">
+        <div class="card">
+          <div class="section-title">
+            <i class="fa-solid fa-bolt"></i> Daily Work Operations
+          </div>
+          <div class="quick-actions-grid" style="margin-top: 12px">
+            <div class="action-card" onclick="openInwardMilkModal()">
+              <div class="action-icon">
+                <i class="fa-solid fa-truck-ramp-box"></i>
+              </div>
+              <div class="action-info">
+                <h4>Inward Milk Entry</h4>
+                <p>Log incoming milk stock received</p>
+              </div>
+            </div>
+            <div class="action-card" onclick="switchTab('delivery-partner')">
+              <div class="action-icon">
+                <i class="fa-solid fa-hand-holding-hand"></i>
+              </div>
+              <div class="action-info">
+                <h4>Assign Stock To Partner</h4>
+                <p>Allocate stock to delivery boys</p>
+              </div>
+            </div>
+            <div class="action-card" onclick="openCounterSaleModal()">
+              <div class="action-icon">
+                <i class="fa-solid fa-cash-register"></i>
+              </div>
+              <div class="action-info">
+                <h4>Direct Counter Sales</h4>
+                <p>Log EOD shop cash collection</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="metrics-grid-4">
+          <div
+            class="metric-card"
+            onclick="openViewModal('Total Central Stock', getStockDetailHtml())"
+          >
+            <div class="metric-data">
+              <label>Total Stock</label>
+              <h2 id="dispTotalStock">1,750 Liters</h2>
+            </div>
+            <div class="metric-badge">
+              <i class="fa-solid fa-warehouse"></i>
+            </div>
+          </div>
+
+          <div
+            class="metric-card"
+            onclick="
+              openViewModal(
+                'Driver Stock Distribution',
+                getDriverStockDetailHtml(),
+              )
+            "
+          >
+            <div class="metric-data">
+              <label>Driver Stock</label>
+              <h2 id="dispDriverStock">350 Units</h2>
+            </div>
+            <div class="metric-badge">
+              <i class="fa-solid fa-truck-fast"></i>
+            </div>
+          </div>
+
+          <div
+            class="metric-card"
+            onclick="
+              openViewModal('Today Total Sales Sheet', getSalesDetailHtml())
+            "
+          >
+            <div class="metric-data">
+              <label>Total Sales</label>
+              <h2 id="dispTotalSales">₹14,520</h2>
+            </div>
+            <div class="metric-badge">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+          </div>
+
+          <div
+            class="metric-card"
+            onclick="
+              openViewModal('Customer Pending Dues', getPendingDuesDetailHtml())
+            "
+          >
+            <div class="metric-data">
+              <label>Pending Amount</label>
+              <h2 id="dispPendingDues" style="color: var(--danger-red)">
+                ₹4,200
+              </h2>
+            </div>
+            <div class="metric-badge">
+              <i class="fa-solid fa-file-invoice-dollar"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-header">
+            <div class="section-title">
+              <i class="fa-solid fa-users-gear"></i> Active Delivery Partners (5
+              Drivers)
+            </div>
+            <button class="btn btn-secondary" onclick="openAddPartnerModal()">
+              <i class="fa-solid fa-plus"></i> Add Partner
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Partner Name</th>
+                  <th>Allocated Stock</th>
+                  <th>Sold Quantity</th>
+                  <th>Remaining Stock</th>
+                  <th>Pending Dues</th>
+                  <th>Live GPS Tracking</th>
+                </tr>
+              </thead>
+              <tbody id="partnerTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-delivery-partner" class="tab-content">
+        <div class="card" style="border-left: 4px solid var(--accent-blue)">
+          <div class="section-title" style="margin-bottom: 12px">
+            <i class="fa-solid fa-bolt-lightning"></i> Quick Sale & Bill
+            Generator
+          </div>
+
+          <div class="pos-grid">
+            <div class="form-group">
+              <label>Select Partner Route</label>
+              <select class="form-control" id="posPartnerSelect"></select>
+            </div>
+
+            <div class="form-group">
+              <label>Select Customer</label>
+              <select class="form-control" id="posCustomerSelect"></select>
+            </div>
+
+            <div class="form-group">
+              <label>Product Item</label>
+              <select class="form-control" id="posProductSelect"></select>
+            </div>
+
+            <div class="form-group">
+              <label>Quantity</label>
+              <input
+                type="number"
+                id="posQty"
+                class="form-control"
+                value="1"
+                min="1"
+              />
+            </div>
+          </div>
+
+          <label
+            style="
+              font-size: 0.82rem;
+              font-weight: 700;
+              display: block;
+              margin-bottom: 6px;
+            "
+            >Payment Method</label
+          >
+          <div class="payment-methods">
+            <div
+              class="pay-option selected"
+              onclick="selectPayType(this, 'QR')"
+            >
+              <i class="fa-solid fa-qrcode"></i> Online QR
+            </div>
+            <div class="pay-option" onclick="selectPayType(this, 'Cash')">
+              <i class="fa-solid fa-money-bill-wave"></i> Cash
+            </div>
+            <div class="pay-option" onclick="selectPayType(this, 'Udhaar')">
+              <i class="fa-solid fa-clock-rotate-left"></i> Udhaar (Credit)
+            </div>
+          </div>
+
+          <div
+            class="form-group hidden"
+            id="dueDateContainer"
+            style="
+              background: #fffbeb;
+              padding: 12px;
+              border: 1px solid var(--warning-amber);
+              border-radius: var(--radius-sm);
+              margin-bottom: 14px;
+            "
+          >
+            <label style="color: var(--warning-amber)"
+              ><i class="fa-solid fa-calendar-days"></i> Udhaar Due Date
+              (Promise Date)</label
+            >
+            <input type="date" id="posDueDate" class="form-control" />
+          </div>
+
+          <button
+            class="btn btn-primary btn-block"
+            style="padding: 12px; background: #25d366; border-color: #25d366"
+            onclick="processQuickSale()"
+          >
+            <i class="fa-brands fa-whatsapp" style="font-size: 1.1rem"></i>
+            Complete & Send Instant WhatsApp Invoice
+          </button>
+        </div>
+
+        <div class="card">
+          <div class="section-title" style="margin-bottom: 14px">
+            <i class="fa-solid fa-boxes-packing"></i> Allocate Stock & Partner
+            Wise Breakdown
+          </div>
+
+          <p
+            style="
+              font-size: 0.85rem;
+              color: var(--text-muted);
+              margin-bottom: 12px;
+            "
+          >
+            Select driver below to choose stock or view their customer
+            transaction history:
+          </p>
+
+          <div class="partner-selector-grid" id="driverPillsContainer"></div>
+
+          <div
+            id="partnerDetailCard"
+            class="card"
+            style="background: #f8fafc; border: 1px dashed var(--border-color)"
+          ></div>
+        </div>
+      </section>
+
+      <section id="view-customers-panel" class="tab-content">
+        <div class="card">
+          <div class="section-header">
+            <div class="section-title">
+              <i class="fa-solid fa-address-book"></i> Central Customer Database
+            </div>
+            <button class="btn btn-primary" onclick="openAddCustomerModal()">
+              <i class="fa-solid fa-user-plus"></i> Add New Customer
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Customer Name</th>
+                  <th>Contact Number</th>
+                  <th>Assigned Partner</th>
+                  <th>Total Purchases</th>
+                  <th>Current Due Balance</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="customerTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="modalOverlay" class="modal-overlay hidden">
+      <div class="modal-body-card">
+        <div class="modal-head">
+          <h3 id="modalTitle">Modal Header</h3>
+          <button class="close-btn" onclick="closeModal()">&times;</button>
+        </div>
+        <div id="modalContent"></div>
+      </div>
+    </div>
+
+    <script src="KanhaDairy.js"></script>
+  </body>
+</html>
