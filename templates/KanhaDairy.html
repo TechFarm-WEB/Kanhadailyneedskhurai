@@ -14,19 +14,24 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
-    <link rel="stylesheet" href="KanhaDairy.css" />
+    <link rel="stylesheet" href="static/KanhaDairy.css" />
   </head>
   <body>
     <header class="header">
       <div class="brand-container">
-        <div class="brand-logo-icon">
-          <i class="mother-dairy-logo"></i>
-        </div>
-        <div class="brand-text">
-          <h1>Kanha Dairy</h1>
-          <span>Main Office Portal</span>
-        </div>
-      </div>
+
+    <div class="brand-logo-icon">
+        <img src="static/images/adminlogo.jpg" alt="Mother Dairy Logo"
+            class="company-logo"
+        >
+    </div>
+
+    <div class="brand-text">
+        <h1>Kanha Daily Needs</h1>
+        <span>Admin Dashboard</span>
+    </div>
+
+</div>
       <div class="header-actions">
         <button class="icon-btn" id="refreshAppBtn" title="Refresh Data">
           <i class="fa-solid fa-rotate-right"></i>
@@ -43,21 +48,21 @@
         id="tabMainOffice"
         onclick="switchTab('main-office')"
       >
-        <i class="fa-solid fa-building-user"></i> Main Office
+        <i class="fa-solid fa-building-user"></i> Dashboard
       </button>
       <button
         class="nav-btn"
         id="tabDeliveryPartner"
         onclick="switchTab('delivery-partner')"
       >
-        <i class="fa-solid fa-hand-holding-hand"></i> Partner Assign
+        <i class="fa-solid fa-hand-holding-hand"></i> Partners
       </button>
       <button
         class="nav-btn"
         id="tabCustomers"
         onclick="switchTab('customers-panel')"
       >
-        <i class="fa-solid fa-users"></i> Customer Records
+        <i class="fa-solid fa-users"></i> Customers
       </button>
     </nav>
 
@@ -73,8 +78,8 @@
                 <i class="fa-solid fa-truck-ramp-box"></i>
               </div>
               <div class="action-info">
-                <h4>Inward Milk Entry</h4>
-                <p>Log incoming milk stock received</p>
+                <h4>Add Stock</h4>
+                <p> Incoming milk stock received</p>
               </div>
             </div>
             <div class="action-card" onclick="switchTab('delivery-partner')">
@@ -82,8 +87,8 @@
                 <i class="fa-solid fa-hand-holding-hand"></i>
               </div>
               <div class="action-info">
-                <h4>Assign Stock To Partner</h4>
-                <p>Allocate stock to delivery boys</p>
+                <h4>Assign Stock </h4>
+                <p>Assign stock to delivery boys</p>
               </div>
             </div>
             <div class="action-card" onclick="openCounterSaleModal()">
@@ -91,8 +96,8 @@
                 <i class="fa-solid fa-cash-register"></i>
               </div>
               <div class="action-info">
-                <h4>Direct Counter Sales</h4>
-                <p>Log EOD shop cash collection</p>
+                <h4> Counter Sales</h4>
+                <p>shop cash collection</p>
               </div>
             </div>
           </div>
@@ -163,7 +168,7 @@
           </div>
         </div>
 
-        <div class="card">
+        <!-- <div class="card">
           <div class="section-header">
             <div class="section-title">
               <i class="fa-solid fa-users-gear"></i> Active Delivery Partners (5
@@ -188,150 +193,153 @@
               <tbody id="partnerTableBody"></tbody>
             </table>
           </div>
-        </div>
+        </div> -->
       </section>
+<!-- Added partners tab on the admin page by gaurav choudhary on 05/08/2026 -->
+     <section id="view-delivery-partner" class="tab-content">
 
-      <section id="view-delivery-partner" class="tab-content">
-        <div class="card" style="border-left: 4px solid var(--accent-blue)">
-          <div class="section-title" style="margin-bottom: 12px">
-            <i class="fa-solid fa-bolt-lightning"></i> Quick Sale & Bill
-            Generator
-          </div>
+    <div class="partner-cards-grid">
 
-          <div class="pos-grid">
-            <div class="form-group">
-              <label>Select Partner Route</label>
-              <select class="form-control" id="posPartnerSelect"></select>
+        <!-- Card 1 -->
+        <div class="partner-module-card">
+            <div class="module-icon">
+                <i class="fa-solid fa-user-plus"></i>
             </div>
 
-            <div class="form-group">
-              <label>Select Customer</label>
-              <select class="form-control" id="posCustomerSelect"></select>
-            </div>
+            <h3>Add Partner</h3>
 
-            <div class="form-group">
-              <label>Product Item</label>
-              <select class="form-control" id="posProductSelect"></select>
-            </div>
-
-            <div class="form-group">
-              <label>Quantity</label>
-              <input
-                type="number"
-                id="posQty"
-                class="form-control"
-                value="1"
-                min="1"
-              />
-            </div>
-          </div>
-
-          <label
-            style="
-              font-size: 0.82rem;
-              font-weight: 700;
-              display: block;
-              margin-bottom: 6px;
-            "
-            >Payment Method</label
-          >
-          <div class="payment-methods">
-            <div
-              class="pay-option selected"
-              onclick="selectPayType(this, 'QR')"
-            >
-              <i class="fa-solid fa-qrcode"></i> Online QR
-            </div>
-            <div class="pay-option" onclick="selectPayType(this, 'Cash')">
-              <i class="fa-solid fa-money-bill-wave"></i> Cash
-            </div>
-            <div class="pay-option" onclick="selectPayType(this, 'Udhaar')">
-              <i class="fa-solid fa-clock-rotate-left"></i> Udhaar (Credit)
-            </div>
-          </div>
-
-          <div
-            class="form-group hidden"
-            id="dueDateContainer"
-            style="
-              background: #fffbeb;
-              padding: 12px;
-              border: 1px solid var(--warning-amber);
-              border-radius: var(--radius-sm);
-              margin-bottom: 14px;
-            "
-          >
-            <label style="color: var(--warning-amber)"
-              ><i class="fa-solid fa-calendar-days"></i> Udhaar Due Date
-              (Promise Date)</label
-            >
-            <input type="date" id="posDueDate" class="form-control" />
-          </div>
-
-          <button
-            class="btn btn-primary btn-block"
-            style="padding: 12px; background: #25d366; border-color: #25d366"
-            onclick="processQuickSale()"
-          >
-            <i class="fa-brands fa-whatsapp" style="font-size: 1.1rem"></i>
-            Complete & Send Instant WhatsApp Invoice
-          </button>
+            <p>
+                Create new delivery partner and vehicle details
+            </p>
         </div>
 
-        <div class="card">
-          <div class="section-title" style="margin-bottom: 14px">
-            <i class="fa-solid fa-boxes-packing"></i> Allocate Stock & Partner
-            Wise Breakdown
-          </div>
+        <!-- Card 2 -->
+        <div class="partner-module-card">
+            <div class="module-icon">
+                <i class="fa-solid fa-boxes-packing"></i>
+            </div>
 
-          <p
-            style="
-              font-size: 0.85rem;
-              color: var(--text-muted);
-              margin-bottom: 12px;
-            "
-          >
-            Select driver below to choose stock or view their customer
-            transaction history:
-          </p>
+            <h3>Assign Stock</h3>
 
-          <div class="partner-selector-grid" id="driverPillsContainer"></div>
-
-          <div
-            id="partnerDetailCard"
-            class="card"
-            style="background: #f8fafc; border: 1px dashed var(--border-color)"
-          ></div>
+            <p>
+                Assign daily stock to delivery partners
+            </p>
         </div>
-      </section>
+
+        <!-- Card 3 -->
+        <div class="partner-module-card">
+            <div class="module-icon">
+                <i class="fa-solid fa-truck-fast"></i>
+            </div>
+
+            <h3>Partner Status</h3>
+
+            <p>
+                View stock, sales and live partner status
+            </p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="partner-module-card">
+            <div class="module-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <h3>Customers</h3>
+
+            <p>
+                Customers assigned under each partner
+            </p>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="partner-module-card">
+            <div class="module-icon">
+                <i class="fa-solid fa-money-bill-wave"></i>
+            </div>
+
+            <h3>Cash With Partner</h3>
+
+            <p>
+                Track cash, UPI and due amounts
+            </p>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="partner-module-card">
+            <div class="module-icon">
+                <i class="fa-solid fa-chart-pie"></i>
+            </div>
+
+            <h3>Today's Summary</h3>
+
+            <p>
+                Daily sales, stock and due overview
+            </p>
+        </div>
+
+    </div>
+
+</section>
 
       <section id="view-customers-panel" class="tab-content">
-        <div class="card">
-          <div class="section-header">
-            <div class="section-title">
-              <i class="fa-solid fa-address-book"></i> Central Customer Database
-            </div>
-            <button class="btn btn-primary" onclick="openAddCustomerModal()">
-              <i class="fa-solid fa-user-plus"></i> Add New Customer
-            </button>
-          </div>
+        <div class="customer-cards-grid">
 
-          <div class="table-responsive">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Customer Name</th>
-                  <th>Contact Number</th>
-                  <th>Assigned Partner</th>
-                  <th>Total Purchases</th>
-                  <th>Current Due Balance</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="customerTableBody"></tbody>
-            </table>
-          </div>
+    <!-- Card 1 -->
+    <div class="customer-module-card">
+        <div class="customer-icon">
+            <i class="fa-solid fa-user-plus"></i>
         </div>
+
+        <h3>Add Customer</h3>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="customer-module-card">
+        <div class="customer-icon">
+            <i class="fa-solid fa-list"></i>
+        </div>
+
+        <h3>Customer List</h3>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="customer-module-card">
+        <div class="customer-icon">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+        </div>
+
+        <h3>Due Customers</h3>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="customer-module-card">
+        <div class="customer-icon">
+            <i class="fa-solid fa-money-bill-wave"></i>
+        </div>
+
+        <h3>Receive Payment</h3>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="customer-module-card">
+        <div class="customer-icon">
+            <i class="fa-solid fa-cart-shopping"></i>
+        </div>
+
+        <h3>Customer Orders</h3>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="customer-module-card">
+        <div class="customer-icon">
+            <i class="fa-solid fa-chart-pie"></i>
+        </div>
+
+        <h3>Customer Summary</h3>
+    </div>
+
+</div>
       </section>
     </main>
 

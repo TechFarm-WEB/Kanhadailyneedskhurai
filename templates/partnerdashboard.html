@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kanha Daily Needs - Partner Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+
+:root{
+    --primary-blue:#004B87;
+    --accent-blue:#0072BC;
+    --bg-light:#F0F4F8;
+    --card-bg:#FFFFFF;
+    --text-dark:#0F172A;
+    --text-muted:#64748B;
+    --border-color:#CBD5E1;
+    --radius-md:14px;
+    --shadow-sm:0 2px 4px rgba(0,0,0,.04);
+    --shadow-md:0 10px 20px -5px rgba(0,75,135,.12);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Plus Jakarta Sans',sans-serif;
+}
+
+body{
+    background:var(--bg-light);
+}
+
+.header{
+
+    background:#fff;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:15px;
+
+    border-bottom:1px solid var(--border-color);
+
+    position:sticky;
+
+    top:0;
+
+    z-index:100;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.brand img{
+    width:55px;
+    height:55px;
+    object-fit:contain;
+}
+
+.brand h2{
+    color:var(--primary-blue);
+    font-size:20px;
+}
+
+.brand span{
+    color:var(--accent-blue);
+    font-size:12px;
+    font-weight:700;
+}
+
+.icon-btn{
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    border:1px solid var(--border-color);
+
+    background:#fff;
+
+    cursor:pointer;
+}
+
+.container{
+    padding:15px;
+}
+
+.metrics{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:12px;
+
+    margin-bottom:18px;
+}
+
+.metric-card{
+
+    background:white;
+
+    border:1px solid var(--border-color);
+
+    border-radius:14px;
+
+    padding:15px;
+
+    box-shadow:var(--shadow-sm);
+}
+
+.metric-card label{
+
+    font-size:12px;
+
+    color:var(--text-muted);
+
+    font-weight:700;
+}
+
+.metric-card h3{
+
+    margin-top:8px;
+
+    color:var(--primary-blue);
+
+    font-size:22px;
+}
+
+.section-title{
+
+    font-weight:800;
+
+    color:var(--primary-blue);
+
+    margin-bottom:12px;
+}
+
+.action-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:12px;
+}
+
+.action-card{
+
+    background:white;
+
+    border:1px solid var(--border-color);
+
+    border-radius:14px;
+
+    min-height:140px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.action-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:var(--shadow-md);
+}
+
+.action-icon{
+
+    width:56px;
+
+    height:56px;
+
+    border-radius:14px;
+
+    background:linear-gradient(
+        135deg,
+        var(--primary-blue),
+        var(--accent-blue)
+    );
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:white;
+
+    font-size:22px;
+
+    margin-bottom:12px;
+}
+
+.action-card h3{
+
+    color:var(--primary-blue);
+
+    font-size:15px;
+
+    font-weight:700;
+}
+
+.partner-name{
+
+    background:white;
+
+    padding:14px;
+
+    border-radius:14px;
+
+    margin-bottom:15px;
+
+    border:1px solid var(--border-color);
+
+    text-align:center;
+}
+
+.partner-name h3{
+    color:var(--primary-blue);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="brand">
+
+        <img src="images/adminlogo.jpg" alt=            <h2>Kanha Daily Needs</h2>
+            <span>PARTNER DASHBOARD</span>
+        </div>
+
+    </div>
+
+    <button class="icon-btn">
+        <i class="fa-solid fa-user"></i>
+    </button>
+
+</header>
+
+<div class="container">
+
+    <div class="partner-name">
+        <h3>🚚 Ramesh Kumar</h3>
+    </div>
+
+    <div class="metrics">
+
+        <div class="metric-card">
+            <label>Assigned Stock</label>
+            <h3>150</h3>
+        </div>
+
+        <div class="metric-card">
+            <label>Total Sales</label>
+            <h3>₹00</h3>
+        </div>
+
+        <div class="metric-card">
+            <label>Stock Left</label>
+            <h3>00</h3>
+        </div>
+
+        <div class="metric-card">
+            <label>Total Due</label>
+            <h3>₹00</h3>
+        </div>
+
+    </div>
+
+    <div class="section-title">
+        Quick Actions
+    </div>
+
+   <div class="action-grid">
+
+    <div class="action-card">
+        <div class="action-icon">
+            <i class="fa-solid fa-file-invoice"></i>
+        </div>
+        <h3>New Bill</h3>
+    </div>
+
+    <div class="action-card">
+        <div class="action-icon">
+            <i class="fa-solid fa-truck"></i>
+        </div>
+        <h3>Customer Delivery</h3>
+    </div>
+
+    <div class="action-card">
+        <div class="action-icon">
+            <i class="fa-solid fa-chart-pie"></i>
+        </div>
+        <h3>Today's Summary</h3>
+    </div>
+
+    <div class="action-card">
+        <div class="action-icon">
+            <i class="fa-solid fa-chart-line"></i>
+        </div>
+        <h3>Sales History</h3>
+    </div>
+
+    <div class="action-card">
+        <div class="action-icon">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+        </div>
+        <h3>Due Customers</h3>
+    </div>
+
+    <div class="action-card">
+        <div class="action-icon">
+            <i class="fa-solid fa-user"></i>
+        </div>
+        <h3>Profile</h3>
+    </div>
+
+</div>
+
+</body>
+</html>

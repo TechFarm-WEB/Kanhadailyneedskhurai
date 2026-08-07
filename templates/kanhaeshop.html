@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kanha Daily Needs - E Shop</title>
+
+<link href="https://fonts.rta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="Eshopcss.css">
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="brand-container">
+
+        <div class="logo-box">
+            <img src="images/adminlogo.jpg" alt="Mother Dairy Logo">
+        </div>
+
+        <div class="brand-text">
+            <h1>Kanha Daily Needs</h1>
+            <span>E-Shop</span>
+        </div>
+
+        <div class="cart-box">
+
+    🛒
+
+    <span id="cartCount">0</span>
+
+</div>
+
+    </div>
+
+</header>
+
+<section class="hero">
+
+    <h2>कान्हा डेली नीड्स</h2>
+
+    <p>Fresh Mother Dairy Products</p>
+
+    <p>Milk • Dahi • Mattha</p>
+
+</section>
+
+<section class="container">
+
+    <h3 class="section-heading">
+        Categories
+    </h3>
+
+    <div class="category-grid">
+
+       <div class="category-card active"
+     onclick="loadCategory('milk',this)">
+
+    <div class="category-icon">🥛</div>
+    <span>Milk</span>
+
+</div>
+
+<div class="category-card"
+     onclick="loadCategory('dahi',this)">
+
+    <div class="category-icon">🥣</div>
+    <span>Dahi</span>
+
+</div>
+
+<div class="category-card"
+     onclick="loadCategory('mattha',this)">
+
+    <div class="category-icon">🥤</div>
+    <span>Mattha</span>
+
+</div>
+
+
+</section>
+
+<section class="container">
+
+    <h3 class="section-heading">
+        Products
+    </h3>
+
+
+<div class="products-grid"
+     id="productsGrid">
+
+</div>
+
+
+
+</section>
+
+<footer class="eshop-footer">
+
+    <div class="shop-info">
+
+        <h3>Kanha Daily Needs</h3>
+
+        <p>
+            Authorized Mother Dairy Distributor
+        </p>
+
+        <p>
+            📍 Sagar Naka Chauraha,
+            Khurai, Madhya Pradesh
+        </p>
+
+        <p>
+            📞 +91 98765 43210
+        </p>
+
+    </div>
+
+    <button class="cart-btn">
+
+        🛒 Go To Cart
+
+    </button>
+
+</footer>
+
+<script>
+let cart = {};
+let cartCount = 0;
+
+const products = {
+
+    milk: [
+
+        {
+            name: "Mother Dairy Gold Milk 6 Liter",
+            price: 396
+        },
+
+        {
+            name: "Mother Dairy Gold Milk 1 Liter",
+            price: 68
+        },
+
+        {
+            name: "Mother Dairy Gold Milk 500ml",
+            price: 34
+        },
+
+        {
+            name: "Mother Dairy Super T+ Milk 1 Liter",
+            price: 59
+        },
+
+        {
+            name: "Mother Dairy Super T Milk 1 Liter",
+            price: 56
+        },
+
+        {
+            name: "Mother Dairy TM Milk 500ml",
+            price: 27.50
+        },
+
+        {
+            name: "Mother Dairy Milk 320ml",
+            price: 18
+        },
+
+        {
+            name: "Mother Dairy बच्चा Milk 170ml",
+            price: 7.50
+        }
+
+    ],
+
+    dahi: [
+
+        {
+            name: "Mother Dairy Dahi Cup 80g",
+            price: 8.50
+        },
+
+        {
+            name: "Mother Dairy Dahi Cup 200g",
+            price: 22
+        },
+
+        {
+            name: "Mother Dairy Dahi Matki 5kg",
+            price: 370
+        }
+
+    ],
+
+    mattha: [
+
+        {
+            name: "Mother Dairy सादा मट्ठा 500ml",
+            price: 13.50
+        },
+
+        {
+            name: "Mother Dairy मसाला मट्ठा 270ml",
+            price: 9
+        }
+
+    ]
+
+};
+
+function increaseQty(productName){
+
+    if(!cart[productName]){
+
+        cart[productName] = 0;
+    }
+
+    cart[productName]++;
+
+    updateQty(productName);
+}
+
+function decreaseQty(productName){
+
+    if(!cart[productName]){
+
+        return;
+    }
+
+    if(cart[productName] > 0){
+
+        cart[productName]--;
+    }
+
+    updateQty(productName);
+}
+
+function updateQty(productName){
+
+    const qty = cart[productName] || 0;
+
+    const id =
+    "qty-" +
+    productName.replace(/\s+/g,'');
+
+    document.getElementById(id).innerText =
+    qty;
+
+    cartCount = Object.values(cart)
+                    .reduce(
+                        (a,b)=>a+b,
+                        0
+                    );
+
+    document.getElementById("cartCount")
+    .innerText = cartCount;
+}
+
+function loadCategory(category, clickedCard) {
+
+    document
+        .querySelectorAll(".category-card")
+        .forEach(card => {
+            card.classList.remove("active");
+        });
+
+    clickedCard.classList.add("active");
+
+    const productsGrid =
+        document.getElementById("productsGrid");
+
+    productsGrid.innerHTML = "";
+
+    products[category].forEach(product => {
+
+        productsGrid.innerHTML += `
+
+            <div class="product-card">
+
+                <div class="product-name">
+                    ${product.name}
+                </div>
+
+                <div class="product-price">
+                    ₹${product.price}
+                </div>
+
+                    <div class="qty-box">
+
+        <button
+            class="qty-btn"
+            onclick="decreaseQty('${product.name}')">
+
+            -
+
+        </button>
+
+        <span
+            id="qty-${product.name.replace(/\s+/g,'')}">
+
+            0
+
+        </span>
+
+        <button
+            class="qty-btn"
+            onclick="increaseQty('${product.name}')">
+
+            +
+
+        </button>
+
+    </div>
+
+            </div>
+
+        `;
+
+    });
+
+}
+
+/* Default Load Milk */
+
+window.onload = function () {
+
+    const firstCard =
+        document.querySelector(".category-card");
+
+    loadCategory(
+        "milk",
+        firstCard
+    );
+
+};
+
+</script>
+</body>
+</html>
