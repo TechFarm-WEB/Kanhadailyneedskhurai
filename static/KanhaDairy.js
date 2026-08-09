@@ -19,6 +19,7 @@ const priceList = [
   { id: "P13", name: "Mother Dairy Dahi Matki", size: "5 kg", price: 370.0 },
 ];
 
+let partnerCache = [];
 // 2. APPLICATION CENTRAL STATE
 const state = {
   drivers: [
@@ -116,10 +117,84 @@ const state = {
 
 // 3. INITIALIZATION ON DOM LOAD
 document.addEventListener("DOMContentLoaded", () => {
+
   renderDashboard();
+
   setupRefreshButton();
+
   setupDefaultDueDate();
+
+  loadTotalStock();
+
+  loadPartnerStockSummary();
+
+  loadPartners();
+
 });
+
+
+async function loadTotalStock() {
+
+    const response =
+    await fetch("/get-total-stock");
+
+    const data =
+    await response.json();
+
+    document.getElementById(
+        "dispTotalStock"
+    ).innerText =
+    data.total_stock + " Units";
+}
+
+
+async function loadPartnerStockSummary() {
+
+    const response =
+    await fetch(
+        "/get-partner-stock-summary"
+    );
+
+    const data =
+    await response.json();
+
+    const stockCard =
+    document.getElementById(
+        "dispDriverStock"
+    );
+
+    const amountCard =
+    document.getElementById(
+        "dispDriverStockAmount"
+    );
+
+    if(stockCard){
+
+        stockCard.innerText =
+        data.total_stock +
+        " Units";
+
+    }
+
+    if(amountCard){
+
+        amountCard.innerText =
+        "₹" +
+        data.total_amount.toFixed(2);
+
+    }
+
+}
+async function loadPartners() {
+
+    const response =
+    await fetch("/get-partners");
+
+    partnerCache =
+    await response.json();
+
+}
+
 
 function setupDefaultDueDate() {
   const nextWeek = new Date();
@@ -131,22 +206,323 @@ function setupDefaultDueDate() {
 
 // MAIN DASHBOARD RENDERER
 function renderDashboard() {
-  renderPartnersTable();
-  renderCustomerTable();
-  populatePosDropdowns();
-  renderDriverPills();
-  renderSelectedDriverDetail();
-  updateSummaryMetrics();
+
+  try {
+    renderPartnersTable();
+  } catch (e) {}
+
+  try {
+    renderCustomerTable();
+  } catch (e) {}
+
+  try {
+    populatePosDropdowns();
+  } catch (e) {}
+
+  try {
+    renderDriverPills();
+  } catch (e) {}
+
+  try {
+    renderSelectedDriverDetail();
+  } catch (e) {}
+
+  try {
+    updateSummaryMetrics();
+  } catch (e) {}
+
 }
 
 function updateSummaryMetrics() {
-  const totalAllocated = state.drivers.reduce((acc, d) => acc + d.allocated, 0);
-  const totalDues = state.customers.reduce((acc, c) => acc + c.dues, 0);
 
-  document.getElementById("dispDriverStock").textContent =
-    `${totalAllocated} Units`;
-  document.getElementById("dispPendingDues").textContent =
-    `₹${totalDues.toLocaleString()}`;
+  const totalAllocated =
+    state.drivers.reduce(
+      (acc, d) => acc + d.allocated,
+      0
+    );
+
+  const totalDues =
+    state.customers.reduce(
+      (acc, c) => acc + c.dues,
+      0
+    );
+
+  const driverStock =
+    document.getElementById(
+      "dispDriverStock"
+    );
+
+  const pending =
+    document.getElementById(
+      "dispPendingDues"
+    );
+
+  if (driverStock) {
+
+    driverStock.textContent =
+      `${totalAllocated} Units`;
+
+  }
+
+  if (pending) {
+
+    pending.textContent =
+      `₹${totalDues.toLocaleString()}`;
+
+  }
+
+}
+
+
+async function openAssignStockModal() {
+
+    const partners = partnerCache;
+
+    const partnerOptions = partners
+        .map(
+            (p) => `
+                <option value="${p[0]}">
+                    ${p[1]}
+                </option>
+            `
+        )
+        .join("");
+
+    const html = `
+
+        <div class="form-group">
+
+            <label>Select Partner</label>
+
+            <select
+                id="assignPartner"
+                class="form-control"
+            >
+                ${partnerOptions}
+            </select>
+
+        </div>
+
+        <hr>
+
+        <div
+            style="
+                max-height:300px;
+                overflow-y:auto;
+            "
+        >
+
+            ${priceList.map((item, index) => `
+
+                <div class="inward-row">
+
+                    <span>
+                        <strong>${item.name}</strong>
+                    </span>
+
+                    <span>
+                        ${item.size}
+                    </span>
+
+                    <span>
+                        ₹${item.price}
+                    </span>
+
+                    <div>
+
+                        <input
+                            type="number"
+                            min="0"
+                            value="0"
+                            id="assignQty_${index}"
+                            onchange="calculateAssignTotal()"
+                        >
+
+                    </div>
+
+                </div>
+
+            `).join("")}
+
+        </div>
+
+        <div
+            style="
+                background:#EBF5FF;
+                padding:12px;
+                margin-top:10px;
+                border-radius:8px;
+            "
+        >
+
+            Total Amount :
+            <strong id="assignTotalDisplay">
+
+                ₹0.00
+
+            </strong>
+
+        </div>
+
+        <br>
+<div
+style="
+display:flex;
+gap:10px;
+margin-top:15px;
+">
+
+<button
+class="btn btn-success"
+onclick="saveAssignedStock('Cash')"
+>
+Cash
+</button>
+
+<button
+class="btn btn-primary"
+onclick="saveAssignedStock('Online')"
+>
+Online
+</button>
+
+<button
+class="btn btn-warning"
+onclick="saveAssignedStock('Later')"
+>
+Pay Later
+</button>
+
+</div>
+
+    `;
+
+    openModal(
+        "Assign Stock To Partner",
+        html
+    );
+
+}
+
+function calculateAssignTotal(){
+
+    let total = 0;
+
+    priceList.forEach(
+
+        (item,index)=>{
+
+            const qty =
+
+            parseInt(
+
+                document.getElementById(
+                    `assignQty_${index}`
+                ).value
+
+            ) || 0;
+
+            total += qty * item.price;
+
+        }
+
+    );
+
+    document.getElementById(
+        "assignTotalDisplay"
+    ).innerText =
+    `₹${total.toFixed(2)}`;
+
+}
+
+
+
+async function saveAssignedStock(paymentMode)
+{
+    const partner_id =
+    document.getElementById(
+        "assignPartner"
+    ).value;
+
+    const items = [];
+
+    priceList.forEach((product,index)=>{
+
+        const qty =
+        parseInt(
+            document.getElementById(
+                `assignQty_${index}`
+            ).value
+        ) || 0;
+
+        if(qty > 0){
+
+            items.push({
+
+                product_id: product.id,
+
+                quantity: qty
+
+            });
+
+        }
+
+    });
+
+    if(items.length === 0){
+
+        alert("Please enter quantity");
+
+        return;
+
+    }
+
+    const response = await fetch(
+
+        "/assign-stock",
+
+        {
+
+            method:"POST",
+
+            headers:{
+
+                "Content-Type":
+                "application/json"
+
+            },
+
+            body:JSON.stringify({
+
+                partner_id,
+
+                payment_mode:paymentMode,
+
+                items
+
+            })
+
+        }
+
+    );
+
+    const result =
+    await response.json();
+
+    if(result.success){
+
+        await loadTotalStock();
+
+        await loadPartnerStockSummary();
+
+        alert(
+            "Stock Assigned Successfully"
+        );
+
+        closeModal();
+
+    }
+
 }
 
 // TAB NAVIGATION SWITCHER
@@ -169,87 +545,129 @@ function switchTab(tabId) {
 
 // RENDER DRIVERS TABLE IN MAIN OFFICE
 function renderPartnersTable() {
-  const tbody = document.getElementById("partnerTableBody");
+
+  const tbody =
+  document.getElementById(
+    "partnerTableBody"
+  );
+
+  if (!tbody) {
+    return;
+  }
+
   tbody.innerHTML = state.drivers
     .map(
       (d) => `
         <tr>
-            <td><strong>${d.name}</strong></td>
-            <td>${d.allocated} Pkts</td>
-            <td>${d.sold} Pkts</td>
-            <td>${d.remaining} Pkts</td>
-            <td>
-                <span class="${d.dues > 0 ? "badge-due" : "badge-zero"}">
-                    ₹${d.dues}
-                </span>
-            </td>
-            <td>
-                <button class="btn btn-primary" onclick="trackLocation('${d.name}', '${d.location}')">
-                    <i class="fa-solid fa-location-crosshairs"></i> Track GPS
-                </button>
-            </td>
+            <td>${d.name}</td>
         </tr>
-    `,
+      `
     )
     .join("");
 }
 
 // RENDER CUSTOMERS DATABASE TABLE
 function renderCustomerTable() {
-  const tbody = document.getElementById("customerTableBody");
+
+  const tbody =
+  document.getElementById(
+    "customerTableBody"
+  );
+
+  if (!tbody) {
+    return;
+  }
+
   tbody.innerHTML = state.customers
     .map(
       (c) => `
         <tr>
-            <td><strong>${c.name}</strong></td>
-            <td>${c.phone}</td>
-            <td>${c.partner}</td>
-            <td>${c.purchases}</td>
-            <td><span class="${c.dues > 0 ? "badge-due" : "badge-zero"}">₹${c.dues}</span></td>
-            <td>
-                <button class="btn btn-secondary" onclick="openViewModal('Customer Order History', 'Fetching record details for ${c.name}...')">
-                    <i class="fa-solid fa-eye"></i> History
-                </button>
-            </td>
+          <td>${c.name}</td>
         </tr>
-    `,
+      `
     )
     .join("");
 }
 
 // POPULATE POS SELECTION DROPDOWNS
 function populatePosDropdowns() {
-  const pSelect = document.getElementById("posPartnerSelect");
+
+  const pSelect =
+    document.getElementById("posPartnerSelect");
+
+  const cSelect =
+    document.getElementById("posCustomerSelect");
+
+  const prodSelect =
+    document.getElementById("posProductSelect");
+
+  // Agar page par ye controls nahi hain
+  // to function exit kar do
+
+  if (!pSelect || !cSelect || !prodSelect) {
+    return;
+  }
+
   pSelect.innerHTML = state.drivers
-    .map((d) => `<option value="${d.id}">${d.name}</option>`)
+    .map(
+      (d) =>
+        `<option value="${d.id}">
+          ${d.name}
+        </option>`
+    )
     .join("");
 
-  const cSelect = document.getElementById("posCustomerSelect");
   cSelect.innerHTML = state.customers
-    .map((c) => `<option value="${c.id}">${c.name} (${c.phone})</option>`)
+    .map(
+      (c) =>
+        `<option value="${c.id}">
+          ${c.name} (${c.phone})
+        </option>`
+    )
     .join("");
 
-  const prodSelect = document.getElementById("posProductSelect");
   prodSelect.innerHTML = priceList
     .map(
       (p) =>
-        `<option value="${p.price}" data-name="${p.name}" data-size="${p.size}">${p.name} (${p.size}) - ₹${p.price}</option>`,
+        `<option
+            value="${p.price}"
+            data-name="${p.name}"
+            data-size="${p.size}">
+            ${p.name} (${p.size}) - ₹${p.price}
+         </option>`
     )
     .join("");
-}
 
+}
 // RENDER DRIVER SELECTION PILLS
 function renderDriverPills() {
-  const container = document.getElementById("driverPillsContainer");
+
+  const container =
+    document.getElementById(
+      "driverPillsContainer"
+    );
+
+  if (!container) {
+    return;
+  }
+
   container.innerHTML = state.drivers
     .map(
       (d) => `
-        <div class="partner-pill ${d.id === state.activeSelectedDriverId ? "active" : ""}" onclick="selectDriverPill('${d.id}')">
-            ${d.name.split(" ")[0]}
+        <div
+          class="partner-pill ${
+            d.id === state.activeSelectedDriverId
+              ? "active"
+              : ""
+          }"
+          onclick="selectDriverPill('${d.id}')"
+        >
+          ${d.name.split(" ")[0]}
         </div>
-    `,
+      `
     )
     .join("");
+
 }
 
 function selectDriverPill(driverId) {
@@ -260,61 +678,27 @@ function selectDriverPill(driverId) {
 
 // RENDER DETAILED BREAKDOWN OF SELECTED DRIVER
 function renderSelectedDriverDetail() {
+
+  const container =
+    document.getElementById(
+      "partnerDetailCard"
+    );
+
+  if (!container) {
+    return;
+  }
+
   const driver = state.drivers.find(
-    (d) => d.id === state.activeSelectedDriverId,
+    (d) => d.id === state.activeSelectedDriverId
   );
-  const driverCustomers = state.customers.filter((c) =>
-    c.partner.includes(driver.name.split(" ")[0]),
-  );
-  const container = document.getElementById("partnerDetailCard");
 
-  container.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
-            <div>
-                <h3 style="color: var(--primary-blue); font-size: 1.1rem;">${driver.name}</h3>
-                <span style="font-size: 0.78rem; color: var(--success-green); font-weight: 700;"><i class="fa-solid fa-signal"></i> GPS Live Active</span>
-            </div>
-            <button class="btn btn-primary" onclick="openChooseProductModal('${driver.id}')">
-                <i class="fa-solid fa-cart-plus"></i> Choose Product & Allocate
-            </button>
-        </div>
-        
-        <div style="display: flex; gap: 14px; background: white; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 14px;">
-            <div><span style="font-size: 0.75rem; color: var(--text-muted);">Allocated:</span> <strong>${driver.allocated} Units</strong></div>
-            <div><span style="font-size: 0.75rem; color: var(--text-muted);">Sold Milk:</span> <strong>${driver.sold} Units</strong></div>
-            <div><span style="font-size: 0.75rem; color: var(--text-muted);">Remained Milk:</span> <strong>${driver.remaining} Units</strong></div>
-        </div>
+  if (!driver) {
+    return;
+  }
 
-        <h4 style="font-size: 0.88rem; font-weight: 700; margin-bottom: 8px; color: var(--text-muted);">Customers Under This Partner (${driverCustomers.length})</h4>
-        <div class="table-responsive">
-            <table class="data-table" style="background: white;">
-                <thead>
-                    <tr>
-                        <th>Customer</th>
-                        <th>Phone</th>
-                        <th>Due Balance</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${
-                      driverCustomers.length > 0
-                        ? driverCustomers
-                            .map(
-                              (c) => `
-                        <tr>
-                            <td>${c.name}</td>
-                            <td>${c.phone}</td>
-                            <td><span class="${c.dues > 0 ? "badge-due" : "badge-zero"}">₹${c.dues}</span></td>
-                        </tr>
-                    `,
-                            )
-                            .join("")
-                        : '<tr><td colspan="3">No assigned customers found.</td></tr>'
-                    }
-                </tbody>
-            </table>
-        </div>
-    `;
+  container.innerHTML =
+    `<h3>${driver.name}</h3>`;
+
 }
 
 // SELECT PAYMENT METHOD & TOGGLE UDHAAR CALENDAR PICKER
@@ -467,9 +851,75 @@ function calculateInwardTotal() {
     `₹${total.toFixed(2)}`;
 }
 
-function saveInwardStockEntry() {
-  alert("Inward Stock Entry Saved Successfully! Central Stock Updated.");
-  closeModal();
+async function saveInwardStockEntry() {
+
+    console.log("SAVE STOCK CLICKED");
+
+    const items = [];
+
+    priceList.forEach((product, index) => {
+
+        const qty =
+        parseInt(
+            document.getElementById(
+                `inwardQty_${index}`
+            ).value
+        ) || 0;
+
+        if (qty > 0) {
+
+            items.push({
+
+                product_id: product.id,
+
+                quantity: qty
+
+            });
+
+        }
+
+    });
+
+    console.log(items);
+
+    if (items.length === 0) {
+
+        alert("Please enter stock quantity");
+
+        return;
+
+    }
+
+    const response = await fetch("/add-stock", {
+
+        method: "POST",
+
+        headers: {
+
+            "Content-Type": "application/json"
+
+        },
+
+        body: JSON.stringify({
+
+            items: items
+
+        })
+
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+
+        await loadTotalStock();
+
+        alert("Stock Added Successfully!");
+
+        closeModal();
+
+    }
+
 }
 
 // CHOOSE PRODUCT FOR PARTNER MODAL
@@ -582,14 +1032,115 @@ function saveNewCustomer() {
 
 // ADD NEW PARTNER MODAL
 function openAddPartnerModal() {
-  const html = `
+
+    const html = `
+
         <div class="form-group">
-            <label>Partner Name & Route</label>
-            <input type="text" id="newPartnerName" class="form-control" placeholder="e.g. Sunil Dutt (Route 6)">
+
+            <label>Partner Name</label>
+
+            <input
+                type="text"
+                id="partnerName"
+                class="form-control"
+            >
+
         </div>
-        <button class="btn btn-primary btn-block" onclick="saveNewPartner()"><i class="fa-solid fa-plus"></i> Add Partner</button>
+
+        <div class="form-group">
+
+            <label>Mobile Number</label>
+
+            <input
+                type="text"
+                id="partnerMobile"
+                class="form-control"
+            >
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Address</label>
+
+            <textarea
+                id="partnerAddress"
+                class="form-control"
+            ></textarea>
+
+        </div>
+
+        <button
+            class="btn btn-primary btn-block"
+            onclick="savePartner()"
+        >
+
+            Save Partner
+
+        </button>
+
     `;
-  openModal("Add New Delivery Partner", html);
+
+    openModal(
+        "Add Delivery Partner",
+        html
+    );
+}
+
+async function savePartner() {
+
+    const partner_name =
+    document.getElementById(
+        "partnerName"
+    ).value;
+
+    const mobile_no =
+    document.getElementById(
+        "partnerMobile"
+    ).value;
+
+    const address =
+    document.getElementById(
+        "partnerAddress"
+    ).value;
+
+    const response =
+    await fetch("/add-partner", {
+
+        method: "POST",
+
+        headers: {
+
+            "Content-Type":
+            "application/json"
+
+        },
+
+        body: JSON.stringify({
+
+            partner_name,
+
+            mobile_no,
+
+            address
+
+        })
+
+    });
+
+    const result =
+    await response.json();
+
+    if(result.success){
+
+        alert(
+            "Partner Added Successfully"
+        );
+
+        closeModal();
+
+    }
+
 }
 
 function saveNewPartner() {

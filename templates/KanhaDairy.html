@@ -110,30 +110,48 @@
           >
             <div class="metric-data">
               <label>Total Stock</label>
-              <h2 id="dispTotalStock">1,750 Liters</h2>
+              <h2 id="dispTotalStock">0000</h2>
             </div>
             <div class="metric-badge">
               <i class="fa-solid fa-warehouse"></i>
             </div>
           </div>
 
-          <div
-            class="metric-card"
-            onclick="
-              openViewModal(
-                'Driver Stock Distribution',
-                getDriverStockDetailHtml(),
-              )
-            "
-          >
-            <div class="metric-data">
-              <label>Driver Stock</label>
-              <h2 id="dispDriverStock">350 Units</h2>
-            </div>
-            <div class="metric-badge">
-              <i class="fa-solid fa-truck-fast"></i>
-            </div>
-          </div>
+     <div
+  class="metric-card"
+  onclick="
+    openViewModal(
+      'Driver Stock Distribution',
+      getDriverStockDetailHtml()
+    )
+  "
+>
+  <div class="metric-data">
+
+    <label>Driver Stock</label>
+
+    <h2 id="dispDriverStock">
+      0 Units
+    </h2>
+
+    <div
+      id="dispDriverStockAmount"
+      style="
+        font-size:12px;
+        margin-top:4px;
+        color:#16a34a;
+        font-weight:600;
+      "
+    >
+      ₹0.00
+    </div>
+
+  </div>
+
+  <div class="metric-badge">
+    <i class="fa-solid fa-truck-fast"></i>
+  </div>
+</div>
 
           <div
             class="metric-card"
@@ -201,30 +219,37 @@
     <div class="partner-cards-grid">
 
         <!-- Card 1 -->
-        <div class="partner-module-card">
-            <div class="module-icon">
-                <i class="fa-solid fa-user-plus"></i>
-            </div>
+    <div
+    class="partner-module-card"
+    onclick="openAddPartnerModal()"
+    style="cursor:pointer;"
+>
 
-            <h3>Add Partner</h3>
+    <h3>Add Partner</h3>
 
-            <p>
-                Create new delivery partner and vehicle details
-            </p>
-        </div>
+    <p>
+        Create new delivery partner
+    </p>
+</div>
 
         <!-- Card 2 -->
-        <div class="partner-module-card">
-            <div class="module-icon">
-                <i class="fa-solid fa-boxes-packing"></i>
-            </div>
+        <div
+    class="partner-module-card"
+    onclick="openAssignStockModal()"
+    style="cursor:pointer;"
+>
+    <div class="module-icon">
+        <i class="fa-solid fa-boxes-packing"></i>
+    </div>
 
-            <h3>Assign Stock</h3>
+    <h3>Assign Stock</h3>
 
-            <p>
-                Assign daily stock to delivery partners
-            </p>
-        </div>
+    <p>
+        Assign daily stock to delivery partners
+    </p>
+</div>
+
+            
 
         <!-- Card 3 -->
         <div class="partner-module-card">
@@ -353,6 +378,6 @@
       </div>
     </div>
 
-    <script src="KanhaDairy.js"></script>
+    <script src="static/KanhaDairy.js"></script>
   </body>
 </html>
