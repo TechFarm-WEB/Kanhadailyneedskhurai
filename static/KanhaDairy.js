@@ -4,7 +4,7 @@
 
 // 1. MOTHER DAIRY CATALOGUE DATA
 const priceList = [
-  { id: "P1", name: "Mother Dairy Gold Milk", size: "6 L", price: 66.0 },
+  { id: "P1", name: "Mother Dairy Gold Milk", size: "6 L", price: 396.0 },
   { id: "P2", name: "Mother Dairy Gold Milk", size: "1 L", price: 68.0 },
   { id: "P3", name: "Mother Dairy Gold Milk", size: "500 ml", price: 34.0 },
   { id: "P4", name: "Mother Dairy Super T Milk", size: "1 L", price: 59.0 },
@@ -1228,3 +1228,120 @@ function setupRefreshButton() {
     alert("Kanha Dairy Dashboard Refreshed!");
   });
 }
+
+
+
+// Modal open karne ka function
+function openPartnerStatusModal() {
+    document.getElementById("partnerStatusModal").style.display = "flex";
+}
+
+// Modal close karne ka function
+function closePartnerStatusModal() {
+    document.getElementById("partnerStatusModal").style.display = "none";
+}
+
+// Agar user modal ke bahaar click kare toh bhi close ho jaye
+window.onclick = function(event) {
+    var modal = document.getElementById("partnerStatusModal");
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+// Main Customer Modal Open/Close
+function openCustomersModal() {
+    document.getElementById("customersModal").style.display = "flex";
+}
+function closeCustomersModal() {
+    document.getElementById("customersModal").style.display = "none";
+}
+
+// Open Real Bill Invoice Popup
+function openRealBill(invId, date, partner, customer, received, due) {
+    document.getElementById("billId").innerText = "#" + invId;
+    document.getElementById("billDate").innerText = date;
+    document.getElementById("billPartner").innerText = partner;
+    document.getElementById("billCustomer").innerText = customer;
+    document.getElementById("billRecAmount").innerText = received;
+    document.getElementById("billDueAmount").innerText = due;
+    
+    document.getElementById("realBillModal").style.display = "flex";
+}
+function closeRealBill() {
+    document.getElementById("realBillModal").style.display = "none";
+}
+
+// Live Search & Date Filtering Code
+function filterCustomerTable() {
+    let searchVal = document.getElementById("searchFilter").value.toLowerCase();
+    let dateVal = document.getElementById("dateFilter").value;
+    let table = document.getElementById("customerTable");
+    let trs = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+    for (let i = 0; i < trs.length; i++) {
+        let textContent = trs[i].textContent.toLowerCase();
+        let rowDate = trs[i].getAttribute("data-date"); // YYYY-MM-DD
+        
+        let matchesSearch = textContent.includes(searchVal);
+        let matchesDate = true;
+        
+        if (dateVal) {
+            matchesDate = (rowDate === dateVal);
+        }
+        
+        if (matchesSearch && matchesDate) {
+            trs[i].style.display = "";
+        } else {
+            trs[i].style.display = "none";
+        }
+    }
+}
+
+// Reset Button Clear Trigger
+function clearFilters() {
+    document.getElementById("searchFilter").value = "";
+    document.getElementById("dateFilter").value = "";
+    filterCustomerTable();
+}
+
+// Close Modals on Outside Click
+window.onclick = function(event) {
+    let custModal = document.getElementById("customersModal");
+    let billModal = document.getElementById("realBillModal");
+    if (event.target == custModal) {
+        custModal.style.display = "none";
+    }
+    if (event.target == billModal) {
+        billModal.style.display = "none";
+    }
+}
+
+
+function filterCustomerTable() {
+    let searchVal = document.getElementById("searchFilter").value.toLowerCase();
+    let dateVal = document.getElementById("dateFilter").value;
+    
+    // Rows ki jagah div elements select karega
+    let container = document.getElementById("customerTable");
+    let cards = container.getElementsByClassName("app-customer-card");
+
+    for (let i = 0; i < cards.length; i++) {
+        let textContent = cards[i].textContent.toLowerCase();
+        let cardDate = cards[i].getAttribute("data-date"); // YYYY-MM-DD
+        
+        let matchesSearch = textContent.includes(searchVal);
+        let matchesDate = true;
+        
+        if (dateVal) {
+            matchesDate = (cardDate === dateVal);
+        }
+        
+        if (matchesSearch && matchesDate) {
+            cards[i].style.display = "flex"; // Mobile layouts standard flex display
+        } else {
+            cards[i].style.display = "none";
+        }
+    }
+}
+

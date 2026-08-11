@@ -28,7 +28,8 @@
 
     <div class="brand-text">
         <h1>Kanha Daily Needs</h1>
-        <span>Admin Dashboard</span>
+        <span>Admin Dashboard</
+          >
     </div>
 
 </div>
@@ -82,7 +83,7 @@
                 <p> Incoming milk stock received</p>
               </div>
             </div>
-            <div class="action-card" onclick="switchTab('delivery-partner')">
+            <div class="action-card" onclick="openAssignStockModal()">
               <div class="action-icon">
                 <i class="fa-solid fa-hand-holding-hand"></i>
               </div>
@@ -250,32 +251,224 @@
 </div>
 
             
+<!-- Card 3 -->
+<!-- Partner Status Card -->
+<div class="partner-module-card" onclick="openPartnerStatusModal()" style="cursor:pointer;"> 
+    <div class="module-icon"> 
+        <i class="fa-solid fa-truck-fast"></i> 
+    </div> 
+    <h3>Partner Status</h3> 
+    <p>View stock, sales and live partner status</p> 
+</div>
 
-        <!-- Card 3 -->
-        <div class="partner-module-card">
-            <div class="module-icon">
-                <i class="fa-solid fa-truck-fast"></i>
-            </div>
-
-            <h3>Partner Status</h3>
-
-            <p>
-                View stock, sales and live partner status
-            </p>
+<!-- Partner Status Modal Popup (Updated Fields) -->
+<div id="partnerStatusModal" class="status-modal-overlay">
+    <div class="status-modal-content">
+        <div class="status-modal-header">
+            <h3><i class="fa-solid fa-truck-fast"></i> Partner Stock & Sales Status</h3>
+            <span class="status-modal-close" onclick="closePartnerStatusModal()">&times;</span>
         </div>
+        <div class="status-modal-body">
+            <!-- Static Data Table -->
+            <table class="status-table">
+                <thead>
+                    <tr>
+                        <th>Partner Name</th>
+                        <th>Stock Assigned</th>
+                        <th>Sales Today</th>
+                        <th>Left Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Rahul Sharma</strong></td>
+                        <td>50 L</td>
+                        <td>₹4,200</td>
+                        <td><span class="status-badge badge-success">8 L Left</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Amit Patel</strong></td>
+                        <td>40 L</td>
+                        <td>₹3,800</td>
+                        <td><span class="status-badge badge-success">2 L Left</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vikram Singh</strong></td>
+                        <td>60 L</td>
+                        <td>₹1,500</td>
+                        <td><span class="status-badge badge-warning">45 L Left</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Deepak Kumar</strong></td>
+                        <td>0 L</td>
+                        <td>₹0</td>
+                        <td><span class="status-badge badge-danger">0 L (No Stock)</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
 
         <!-- Card 4 -->
-        <div class="partner-module-card">
-            <div class="module-icon">
-                <i class="fa-solid fa-users"></i>
-            </div>
+      <!-- Partner Customers Card -->
+<div class="partner-module-card" onclick="openCustomersModal()" style="cursor:pointer;"> 
+    <div class="module-icon"> 
+        <i class="fa-solid fa-users"></i> 
+    </div> 
+    <h3>Partner Customers</h3> 
+    <p>View partner sales, customer dues and bills</p> 
+</div>
 
-            <h3>Customers</h3>
-
-            <p>
-                Customers assigned under each partner
-            </p>
+<!-- Main Partner Customers Modal -->
+<div id="customersModal" class="status-modal-overlay">
+    <div class="status-modal-content" style="max-width: 900px;">
+        <div class="status-modal-header">
+            <h3><i class="fa-solid fa-users"></i> Partner Customers Directory</h3>
+            <span class="status-modal-close" onclick="closeCustomersModal()">&times;</span>
         </div>
+        
+        <!-- Filters Block -->
+        <div class="filter-container">
+            <input type="text" id="searchFilter" placeholder="🔍 Search by Partner or Customer..." onkeyup="filterCustomerTable()">
+            <input type="date" id="dateFilter" onchange="filterCustomerTable()">
+            <button class="clear-btn" onclick="clearFilters()">Reset</button>
+        </div>
+
+       <div class="status-modal-body">
+    <!-- Mobile App Style Customer Cards Container -->
+    <div class="app-cards-container" id="customerTable">
+        
+        <!-- Card 1 (Recent - Top Par) -->
+        <div class="app-customer-card" data-date="2026-08-11">
+            <div class="card-app-header">
+                <span class="app-date">📅 11-Aug-2026</span>
+                <span class="status-badge badge-success">Fully Paid</span>
+            </div>
+            
+            <div class="card-app-section">
+                <p class="label-title">PARTNER INFO</p>
+                <p class="main-info"><strong>Rahul Sharma</strong></p>
+                <p class="sub-info">📱 +91 9876543210</p>
+            </div>
+            
+            <div class="card-app-section">
+                <p class="label-title">CUSTOMER & ADDRESS</p>
+                <p class="main-info"><strong>Ramesh Kumar</strong></p>
+                <p class="sub-info">📍 Flat 402, Green Villa, Mumbai</p>
+            </div>
+            
+            <div class="card-app-footer">
+                <div class="amount-block">
+                    <span class="amt-lbl">Received</span>
+                    <span class="amt-val received-amt">₹1,200</span>
+                </div>
+                <div class="amount-block">
+                    <span class="amt-lbl">Due</span>
+                    <span class="amt-val due-amt total-zero">₹0</span>
+                </div>
+                <button class="app-view-bill-btn" onclick="openRealBill('INV-9921', '11-Aug-2026', 'Rahul Sharma', 'Ramesh Kumar', '₹1,200', '₹0')">
+                    📄 View Bill
+                </button>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="app-customer-card" data-date="2026-08-10">
+            <div class="card-app-header">
+                <span class="app-date">📅 10-Aug-2026</span>
+                <span class="status-badge badge-warning">Due Pending</span>
+            </div>
+            
+            <div class="card-app-section">
+                <p class="label-title">PARTNER INFO</p>
+                <p class="main-info"><strong>Amit Patel</strong></p>
+                <p class="sub-info">📱 +91 9812345678</p>
+            </div>
+            
+            <div class="card-app-section">
+                <p class="label-title">CUSTOMER & ADDRESS</p>
+                <p class="main-info"><strong>Suresh Mehta</strong></p>
+                <p class="sub-info">📍 Shop No. 5, Main Bazar</p>
+            </div>
+            
+            <div class="card-app-footer">
+                <div class="amount-block">
+                    <span class="amt-lbl">Received</span>
+                    <span class="amt-val received-amt">₹800</span>
+                </div>
+                <div class="amount-block">
+                    <span class="amt-lbl">Due</span>
+                    <span class="amt-val due-amt total-pending">₹350</span>
+                </div>
+                <button class="app-view-bill-btn" onclick="openRealBill('INV-9920', '10-Aug-2026', 'Amit Patel', 'Suresh Mehta', '₹800', '₹350')">
+                    📄 View Bill
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Inner Real Bill Preview Modal -->
+<div id="realBillModal" class="status-modal-overlay" style="z-index: 1100;">
+    <div class="bill-box">
+        <div class="bill-header">
+            <h4>TAX INVOICE</h4>
+            <span class="status-modal-close" onclick="closeRealBill()">&times;</span>
+        </div>
+        <div class="bill-body">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                <div>
+                    <h3 style="color: var(--primary-blue); margin-bottom:5px;">Your Company Logo</h3>
+                    <p style="font-size:12px; color:var(--text-muted);">Live Delivery Tracking System</p>
+                </div>
+                <div style="text-align: right; font-size: 13px;">
+                    <p><strong>Invoice:</strong> <span id="billId">#INV-0000</span></p>
+                    <p><strong>Date:</strong> <span id="billDate">--/--/----</span></p>
+                </div>
+            </div>
+            <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 15px 0;">
+            <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 20px;">
+                <div>
+                    <p style="color:var(--text-muted); font-weight:600;">DELIVERED BY (PARTNER)</p>
+                    <p><strong id="billPartner">--</strong></p>
+                </div>
+                <div style="text-align: right;">
+                    <p style="color:var(--text-muted); font-weight:600;">BILLED TO (CUSTOMER)</p>
+                    <p><strong id="billCustomer">--</strong></p>
+                </div>
+            </div>
+            <table style="width: 100%; font-size: 13px; margin-bottom: 20px; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: var(--bg-light); text-align: left;">
+                        <th style="padding: 8px;">Description</th>
+                        <th style="padding: 8px; text-align: right;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 10px 8px; border-bottom: 1px solid var(--border-color);">Product Supply (Liters)</td>
+                        <td style="padding: 10px 8px; border-bottom: 1px solid var(--border-color); text-align: right;" id="billRecAmount">₹0.00</td>
+                    </tr>
+                    <tr style="font-weight: bold;">
+                        <td style="padding: 10px 8px; text-align: right;">Total Due Remaining:</td>
+                        <td style="padding: 10px 8px; text-align: right; color: var(--danger-red);" id="billDueAmount">₹0.00</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="text-align: center; margin-top: 25px;">
+                <button class="view-bill-btn" onclick="window.print()" style="background: var(--primary-blue);">🖨️ Print Invoice</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
         <!-- Card 5 -->
         <div class="partner-module-card">
