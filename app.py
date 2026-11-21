@@ -3,16 +3,15 @@ import psycopg2
 
 app = Flask(__name__)
 
-
 def get_db_connection():
-
     return psycopg2.connect(
-        host="dpg-d9iiniflk1mc73d52dp0-a.virginia-postgres.render.com",
-        database="techfarm_db",
-        user="techfarm_db_user",
-        password="qbZt6HzYeWp0ZQ2vkGWajfkQwTOfd146",
+        host="dpg-dbvc53ks728c73dp5stg-a.virginia-postgres.render.com",
+        database="techfarm_db_t6nn",
+        user="techfarm_db_t6nn_user",
+        password="WON9gBUsRXSlLRbIhTb4vMWSxi1c3P5Y",
         port="5432"
     )
+
 
 def insert_default_products():
 
