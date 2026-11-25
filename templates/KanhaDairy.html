@@ -107,7 +107,7 @@
         <div class="metrics-grid-4">
           <div
             class="metric-card"
-            onclick="openViewModal('Total Central Stock', getStockDetailHtml())"
+            onclick="openTotalStockDetails()"
           >
             <div class="metric-data">
               <label>Total Stock</label>
@@ -117,8 +117,13 @@
               <i class="fa-solid fa-warehouse"></i>
             </div>
           </div>
+     
+<div
+  class="metric-card"
+  onclick="openDriverStockDetails()"
+>
 
-     <div
+     <!-- <div
   class="metric-card"
   onclick="
     openViewModal(
@@ -126,7 +131,7 @@
       getDriverStockDetailHtml()
     )
   "
->
+> -->
   <div class="metric-data">
 
     <label>Driver Stock</label>
@@ -156,8 +161,7 @@
 
           <div
             class="metric-card"
-            onclick="
-              openViewModal('Today Total Sales Sheet', getSalesDetailHtml())
+            onclick="openTotalSalesDetails()"
             "
           >
             <div class="metric-data">
@@ -171,9 +175,7 @@
 
           <div
             class="metric-card"
-            onclick="
-              openViewModal('Customer Pending Dues', getPendingDuesDetailHtml())
-            "
+            onclick="openPendingAmountDetails()"
           >
             <div class="metric-data">
               <label>Pending Amount</label>
